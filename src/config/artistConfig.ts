@@ -13,7 +13,7 @@ export const defaultArtistConfig: ArtistConfig = {
   // HERO — KEEP THESE FILE NAMES THE SAME
   // Replace the actual files in /public for each artist.
   // ============================================================
-  heroVideoUrl: "/hero-video.mp4",
+  heroVideoUrl: "/hero-loop.webp",
   heroImage: "/hero-poster.jpg",
   profileImage: "",
 
