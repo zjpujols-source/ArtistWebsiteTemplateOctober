@@ -10,8 +10,51 @@ You are working with an existing approved artist website template. Do not modify
 
 Run the existing project's typecheck/build process. If there are errors, fix ONLY the actual errors using the smallest possible surgical changes. Do not redesign, refactor unrelated code, replace components, remove functionality, or change the visual layout. If there are no errors, make no changes. After the project works, stop.
 
-## Prompt 3 — Create a new artist site
+## Prompt 3 — Create and Publish a New Artist Site
 
-Paste the generated prompt from the Artist Site Builder here.
+Copy and fill out the prompt below to generate a new artist website that automatically builds and deploys to Cloudflare via GitHub:
 
-The generated prompt will provide the artist name, hero video filename, social links, song titles, YouTube video links, and contact email. It also instructs you to research and verify the exact song's availability on Spotify, Apple Music, YouTube Music, Amazon Music, Deezer, Tidal, and SoundCloud, and to use the existing Stream / Download modal.
+```markdown
+Create a new website for artist [ARTIST NAME] using the Github artist template from October (ArtistWebsiteTemplateOctober).
+
+### Artist Information & Links
+- Artist Name: [ARTIST NAME]
+- Genre / Style: [e.g. R&B / Soul / Pop]
+- Apple Music: [APPLE MUSIC URL]
+- Spotify: [SPOTIFY URL]
+- Instagram: [INSTAGRAM URL]
+- TikTok: [TIKTOK URL]
+- YouTube Channel: [YOUTUBE CHANNEL URL]
+
+### Music Videos (YouTube)
+- [YOUTUBE VIDEO 1 URL]
+- [YOUTUBE VIDEO 2 URL]
+- [YOUTUBE VIDEO 3 URL]
+- [YOUTUBE VIDEO 4 URL]
+
+### Background Video & Media
+- Hero background clip: located in Downloads with CLIP in the title (e.g. [Artist]CLIP.mov). Transcode with ffmpeg into web-optimized H.264 mp4 without audio (public/hero-video.mp4) and extract a sharp still frame (public/hero-poster.jpg).
+
+### Music Releases & Streaming Modal
+- Research the artist's full discography using Deezer, Apple Music, and Spotify.
+- Include her/his 5+ releases in chronological order (including the 4 most recent releases).
+- For each release, download high-resolution cover art (1000x1000) to public/covers/.
+- Include EVERY available platform in the StreamModal for each release:
+  - Spotify
+  - Apple Music
+  - YouTube Music
+  - YouTube Video / Visualizer (where available)
+  - Amazon Music
+  - Deezer
+  - Tidal
+
+### Cloudflare & GitHub Requirements
+1. Initialize a new folder named [ArtistName] copied from ArtistWebsiteTemplateOctober.
+2. In wrangler.jsonc, set name to lowercase slug and ENSURE the build hook is present:
+   "build": { "command": "npm run build" }
+   (This is mandatory so Cloudflare Workers/Pages never fails with a missing dist directory).
+3. Update index.html, metadata.json, and package.json with the artist's details.
+4. Verify build locally with `npm run lint` and `npm run build`.
+5. Create a new public repository on GitHub under zjpujols-source/[ArtistName] and push the code to main.
+6. Start the local server on an open port (e.g. 3001) to verify everything renders properly.
+```
