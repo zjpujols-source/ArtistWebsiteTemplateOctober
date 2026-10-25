@@ -19,12 +19,14 @@ Create a new website for artist [ARTIST NAME] using the Github artist template f
 
 ### Artist Information & Links
 - Artist Name: [ARTIST NAME]
-- Genre / Style: [e.g. R&B / Soul / Pop]
 - Apple Music: [APPLE MUSIC URL]
 - Spotify: [SPOTIFY URL]
+- YouTube Channel: [YOUTUBE CHANNEL URL]
 - Instagram: [INSTAGRAM URL]
 - TikTok: [TIKTOK URL]
-- YouTube Channel: [YOUTUBE CHANNEL URL]
+- SoundCloud: [SOUNDCLOUD URL - Optional]
+- Bandcamp: [BANDCAMP URL - Optional]
+- Audiomack: [AUDIOMACK URL - Optional]
 
 ### Music Videos (YouTube)
 - [YOUTUBE VIDEO 1 URL]
@@ -33,20 +35,28 @@ Create a new website for artist [ARTIST NAME] using the Github artist template f
 - [YOUTUBE VIDEO 4 URL]
 
 ### Background Video & Media
-- Hero background clip: located in Downloads with CLIP in the title (e.g. [Artist]CLIP.mov). Transcode with ffmpeg into web-optimized H.264 mp4 without audio (public/hero-video.mp4) and extract a sharp still frame (public/hero-poster.jpg).
+- Hero background clip: located in ~/Downloads with CLIP in the title (e.g. [Artist]CLIP.mov), or provide a direct Cloudflare CDN video URL. If local, transcode with ffmpeg into web-optimized H.264 mp4 without audio (public/hero-video.mp4) and extract a sharp still frame (public/hero-poster.jpg).
 
 ### Music Releases & Streaming Modal
-- Research the artist's full discography using Deezer, Apple Music, and Spotify.
-- Include her/his 5+ releases in chronological order (including the 4 most recent releases).
+- Research the artist's full discography using Deezer, Apple Music, and Spotify APIs.
+- Include 5+ releases in chronological order (specifically including the 4 most recent releases).
 - For each release, download high-resolution cover art (1000x1000) to public/covers/.
 - Include EVERY available platform in the StreamModal for each release:
   - Spotify
   - Apple Music
   - YouTube Music
   - YouTube Video / Visualizer (where available)
+  - SoundCloud
+  - Bandcamp
+  - Audiomack
   - Amazon Music
   - Deezer
   - Tidal
+  - Pandora
+  - iHeartRadio
+  - iTunes Store
+
+*(Note: All platform logos are pre-baked in PlatformIcons.tsx. Never draw or generate SVGs—only populate the URL fields).*
 
 ### Cloudflare & GitHub Requirements
 1. Initialize a new folder named [ArtistName] copied from ArtistWebsiteTemplateOctober.

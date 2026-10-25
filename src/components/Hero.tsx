@@ -10,30 +10,45 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ config }) => {
   const isVideo = config.heroVideoUrl?.match(/\.(mp4|mov|webm)$/i);
+  const posterUrl = config.heroImage || '/hero-poster.jpg';
 
   return (
     <section className="relative w-full h-[50vh] min-h-[320px] sm:h-[85vh] lg:h-[92vh] overflow-hidden bg-black flex items-center justify-center border-b border-white/10 select-none">
       {/* 
-        High-Performance Hero Loop:
-        When using animated WebP, it renders natively as an image, completely eliminating 
-        HTML5 <video> elements and permanently preventing mobile in-app browsers (like TikTok & Instagram)
-        from ever hijacking background playback into native fullscreen player modals.
+        High-Performance Hero Background:
+        - A still frame from the video (/hero-poster.jpg) renders instantly underneath
+        - alt="" ensures browsers never display raw text while loading
+        - The animated loop or video renders smoothly on top
       */}
-      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none">
+      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none bg-black">
+        {/* Instant video still frame poster */}
+        {posterUrl && (
+          <img
+            src={posterUrl}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-90 pointer-events-none select-none"
+            loading="eager"
+            fetchPriority="high"
+          />
+        )}
+
         {isVideo ? (
           <video
             src={config.heroVideoUrl}
+            poster={posterUrl}
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
+            className="relative w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
           />
         ) : (
           <img
             src={config.heroVideoUrl || '/hero-loop.webp'}
-            alt={`${config.artistName} background loop`}
-            className="w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
+            alt=""
+            aria-hidden="true"
+            className="relative w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
             loading="eager"
             decoding="async"
           />

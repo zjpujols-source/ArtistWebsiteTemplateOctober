@@ -1,7 +1,5 @@
 export type TabType = 'music' | 'videos' | 'live' | 'shop' | 'contact';
 
-export type ThemePreset = 'dark' | 'light' | 'neon' | 'monochrome';
-
 export interface SocialLink {
   id: string;
   platform:
@@ -11,6 +9,8 @@ export interface SocialLink {
     | 'tiktok'
     | 'apple-music'
     | 'soundcloud'
+    | 'bandcamp'
+    | 'audiomack'
     | 'twitter'
     | string;
   url: string;
@@ -38,12 +38,17 @@ export interface Release {
   spotifyUrl?: string;
   appleMusicUrl?: string;
   youtubeMusicUrl?: string;
+  youtubeUrl?: string;
   amazonMusicUrl?: string;
   deezerUrl?: string;
   tidalUrl?: string;
   soundcloudUrl?: string;
+  bandcampUrl?: string;
+  audiomackUrl?: string;
+  pandoraUrl?: string;
+  iheartUrl?: string;
+  itunesUrl?: string;
   songlinkUrl?: string;
-  youtubeUrl?: string;
 }
 
 export interface VideoItem {
@@ -55,20 +60,13 @@ export interface VideoItem {
 
 export interface ArtistConfig {
   artistName: string;
-  tagline: string;
-  genre?: string;
-  bio?: string;
 
-  // Hero assets
+  // Hero assets (supports local /hero-video.mp4 or remote CDN URLs)
   heroVideoUrl: string;
   heroImage: string;
   profileImage: string;
 
-  // Design
-  accentColor: string;
-  theme: ThemePreset;
-
-  // Social links
+  // Social & streaming links
   socials: SocialLink[];
 
   tabs: {
@@ -87,21 +85,19 @@ export interface ArtistConfig {
     live: {
       enabled: boolean;
       title: string;
-      status: 'active' | 'coming_soon';
+      status?: 'active' | 'coming_soon';
     };
 
     shop: {
       enabled: boolean;
       title: string;
-      status: 'active' | 'coming_soon';
+      status?: 'active' | 'coming_soon';
     };
 
     contact: {
       enabled: boolean;
       title: string;
       managementEmail?: string;
-      bookingEmail?: string;
-      pressEmail?: string;
     };
   };
 }

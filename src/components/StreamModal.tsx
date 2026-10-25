@@ -9,7 +9,12 @@ import {
   AmazonMusicIcon,
   DeezerIcon,
   TidalIcon,
-  SoundCloudIcon
+  SoundCloudIcon,
+  BandcampIcon,
+  AudiomackIcon,
+  PandoraIcon,
+  IHeartRadioIcon,
+  ITunesIcon
 } from './PlatformIcons';
 
 interface StreamModalProps {
@@ -132,6 +137,61 @@ export const StreamModal: React.FC<StreamModalProps> = ({
       textColor: 'text-white',
       badge: 'Stream',
       icon: <SoundCloudIcon className="w-5 h-5 fill-current" />,
+    });
+  }
+
+  if (release.bandcampUrl) {
+    platforms.push({
+      name: 'Bandcamp',
+      url: release.bandcampUrl,
+      iconBg: 'bg-[#629AA9] text-white',
+      textColor: 'text-white',
+      badge: 'Buy / Stream',
+      icon: <BandcampIcon className="w-5 h-5 fill-current" />,
+    });
+  }
+
+  if (release.audiomackUrl) {
+    platforms.push({
+      name: 'Audiomack',
+      url: release.audiomackUrl,
+      iconBg: 'bg-[#FFA200] text-black',
+      textColor: 'text-white',
+      badge: 'Stream',
+      icon: <AudiomackIcon className="w-5 h-5 fill-current" />,
+    });
+  }
+
+  if (release.pandoraUrl) {
+    platforms.push({
+      name: 'Pandora',
+      url: release.pandoraUrl,
+      iconBg: 'bg-[#005483] text-white',
+      textColor: 'text-white',
+      badge: 'Stream',
+      icon: <PandoraIcon className="w-5 h-5 fill-current" />,
+    });
+  }
+
+  if (release.iheartUrl) {
+    platforms.push({
+      name: 'iHeartRadio',
+      url: release.iheartUrl,
+      iconBg: 'bg-[#C6002B] text-white',
+      textColor: 'text-white',
+      badge: 'Radio / Stream',
+      icon: <IHeartRadioIcon className="w-5 h-5 fill-current" />,
+    });
+  }
+
+  if (release.itunesUrl) {
+    platforms.push({
+      name: 'iTunes Store',
+      url: release.itunesUrl,
+      iconBg: 'bg-[#EA4CC0] text-white',
+      textColor: 'text-white',
+      badge: 'Buy',
+      icon: <ITunesIcon className="w-5 h-5 fill-current" />,
     });
   }
 

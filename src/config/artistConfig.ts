@@ -5,26 +5,20 @@ export const defaultArtistConfig: ArtistConfig = {
   // ARTIST INFORMATION — CHANGE THESE FOR EACH NEW ARTIST
   // ============================================================
   artistName: "ARTIST NAME",
-  tagline: "Official Artist Website",
-  genre: "Genre / Style",
-  bio: "Artist bio goes here.",
 
   // ============================================================
   // HERO — KEEP THESE FILE NAMES THE SAME
-  // Replace the actual files in /public for each artist.
+  // Replace the actual files in /public for each artist,
+  // or provide a direct remote Cloudflare R2 / CDN video URL.
   // ============================================================
   heroVideoUrl: "/hero-loop.webp",
   heroImage: "/hero-poster.jpg",
   profileImage: "",
 
   // ============================================================
-  // DESIGN
-  // ============================================================
-  accentColor: "#a855f7",
-  theme: "dark",
-
-  // ============================================================
-  // SOCIALS — ADD/REMOVE/REPLACE LINKS FOR EACH ARTIST
+  // SOCIALS & STREAMING LINKS
+  // Pre-baked verified SVGs exist for: spotify, apple-music,
+  // youtube, soundcloud, bandcamp, audiomack, instagram, tiktok.
   // ============================================================
   socials: [
     {
@@ -41,6 +35,13 @@ export const defaultArtistConfig: ArtistConfig = {
       isStreaming: true
     },
     {
+      id: "apple-music",
+      platform: "apple-music",
+      url: "",
+      label: "Apple Music",
+      isStreaming: true
+    },
+    {
       id: "youtube",
       platform: "youtube",
       url: "",
@@ -51,13 +52,6 @@ export const defaultArtistConfig: ArtistConfig = {
       platform: "tiktok",
       url: "",
       label: "TikTok"
-    },
-    {
-      id: "apple-music",
-      platform: "apple-music",
-      url: "",
-      label: "Apple Music",
-      isStreaming: true
     }
   ],
 
@@ -76,34 +70,12 @@ export const defaultArtistConfig: ArtistConfig = {
           coverArt: "",
           spotifyUrl: "",
           appleMusicUrl: "",
-          youtubeMusicUrl: ""
-        },
-        {
-          id: "release-2",
-          title: "SONG TITLE",
-          type: "single",
-          coverArt: "",
-          spotifyUrl: "",
-          appleMusicUrl: "",
-          youtubeMusicUrl: ""
-        },
-        {
-          id: "release-3",
-          title: "SONG TITLE",
-          type: "single",
-          coverArt: "",
-          spotifyUrl: "",
-          appleMusicUrl: "",
-          youtubeMusicUrl: ""
-        },
-        {
-          id: "release-4",
-          title: "SONG TITLE",
-          type: "single",
-          coverArt: "",
-          spotifyUrl: "",
-          appleMusicUrl: "",
-          youtubeMusicUrl: ""
+          youtubeMusicUrl: "",
+          soundcloudUrl: "",
+          bandcampUrl: "",
+          audiomackUrl: "",
+          deezerUrl: "",
+          tidalUrl: ""
         }
       ]
     },
@@ -114,18 +86,6 @@ export const defaultArtistConfig: ArtistConfig = {
       items: [
         {
           id: "video-1",
-          title: "VIDEO TITLE",
-          youtubeId: "",
-          thumbnail: ""
-        },
-        {
-          id: "video-2",
-          title: "VIDEO TITLE",
-          youtubeId: "",
-          thumbnail: ""
-        },
-        {
-          id: "video-3",
           title: "VIDEO TITLE",
           youtubeId: "",
           thumbnail: ""
