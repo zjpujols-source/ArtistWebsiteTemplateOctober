@@ -39,7 +39,9 @@ Create a new website for artist [ARTIST NAME] using the Github artist template f
 
 ### Music Releases & Streaming Modal
 - Research the artist's full discography using Deezer, Apple Music, and Spotify APIs.
-- Include 5+ releases in chronological order (specifically including the 4 most recent releases).
+- Include exactly 5 releases in the discography section:
+  1. The 3 most recent releases (newest singles, EPs, or albums).
+  2. The 2 all-time most popular releases (based on Spotify top tracks / all-time highest streams).
 - For each release, download high-resolution cover art (1000x1000) to public/covers/.
 - Include EVERY available platform in the StreamModal for each release:
   - Spotify
