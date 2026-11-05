@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-# Ensure orderly builds if multiple uploads happen close together
 concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: false
@@ -26,7 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and Deploy to Cloudflare
+      - name: Build site
+        run: npm run build
+
+      - name: Deploy to Cloudflare
+        if: env.CLOUDFLARE_API_TOKEN != ''
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
