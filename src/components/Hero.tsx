@@ -14,25 +14,7 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
 
   return (
     <section className="relative w-full h-[50vh] min-h-[320px] sm:h-[85vh] lg:h-[92vh] overflow-hidden bg-black flex items-center justify-center border-b border-white/10 select-none">
-      {/* 
-        High-Performance Hero Background:
-        - A still frame from the video (/hero-poster.jpg) renders instantly underneath
-        - alt="" ensures browsers never display raw text while loading
-        - The animated loop or video renders smoothly on top
-      */}
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none bg-black">
-        {/* Instant video still frame poster */}
-        {posterUrl && (
-          <img
-            src={posterUrl}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-90 pointer-events-none select-none"
-            loading="eager"
-            fetchPriority="high"
-          />
-        )}
-
         {isVideo ? (
           <video
             src={config.heroVideoUrl}
@@ -41,14 +23,14 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
             loop
             muted
             playsInline
-            className="relative w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
+            className="relative w-full h-full object-cover object-center pointer-events-none select-none"
           />
         ) : (
           <img
-            src={config.heroVideoUrl || '/hero-loop.webp'}
+            src={config.heroVideoUrl || posterUrl || '/hero-loop.webp'}
             alt=""
             aria-hidden="true"
-            className="relative w-full h-full object-cover object-center opacity-90 transition-opacity duration-500 pointer-events-none select-none"
+            className="relative w-full h-full object-cover object-center pointer-events-none select-none"
             loading="eager"
             decoding="async"
           />
