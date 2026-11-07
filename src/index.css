@@ -11,3 +11,14 @@
     scrollbar-width: none;  /* Firefox */
   }
 }
+
+/* Suppress iOS Safari default play overlay on background hero videos */
+video::-webkit-media-controls,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
