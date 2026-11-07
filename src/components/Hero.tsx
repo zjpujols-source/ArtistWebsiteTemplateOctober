@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArtistConfig, TabType } from '../types/artist';
 
 interface HeroProps {
@@ -11,56 +11,54 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ config }) => {
   const isVideo = Boolean(config.heroVideoUrl?.match(/\.(mp4|mov|webm)$/i));
   const posterUrl = config.heroImage || '/hero-poster.jpg';
-  const [videoError, setVideoError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !isVideo) return;
 
-    // Force muted on the underlying DOM element for strict mobile browser policies
+    // Explicitly enforce attributes on the underlying DOM element for iOS WebKit
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
     video.defaultMuted = true;
     video.muted = true;
 
-    // Attempt autoplay immediately
-    const startPlay = () => {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            // iOS Low Power Mode blocks unprompted autoplay; starts on first touch/scroll
-          });
+    const playVideo = () => {
+      video.play().catch(() => {
+        // Fallback for strict browser power policies
+      });
+    };
+
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('loadeddata', playVideo, { once: true });
+      video.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    // Safety fallback: if paused by power policies, immediately play on any touch or scroll
+    const handleTouch = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
       }
     };
 
-    startPlay();
-
-    // If iOS Low Power Mode paused playback, kick off looping on user's first interaction
-    const handleInteraction = () => {
-      if (video && video.paused) {
-        video.play().then(() => setIsPlaying(true)).catch(() => {});
-      }
-    };
-
-    window.addEventListener('touchstart', handleInteraction, { passive: true, once: true });
-    window.addEventListener('scroll', handleInteraction, { passive: true, once: true });
-    window.addEventListener('click', handleInteraction, { passive: true, once: true });
+    window.addEventListener('touchstart', handleTouch, { passive: true, once: true });
+    window.addEventListener('scroll', handleTouch, { passive: true, once: true });
 
     return () => {
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('scroll', handleInteraction);
-      window.removeEventListener('click', handleInteraction);
+      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', playVideo);
+      window.removeEventListener('touchstart', handleTouch);
+      window.removeEventListener('scroll', handleTouch);
     };
   }, [isVideo, config.heroVideoUrl]);
 
   return (
     <section className="relative w-full h-[50vh] min-h-[320px] sm:h-[85vh] lg:h-[92vh] overflow-hidden bg-black flex items-center justify-center border-b border-white/10 select-none">
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none bg-black">
-        {/* Baseline Poster Image: Always rendered to prevent black-screen gaps or play icon overlays */}
+        {/* Baseline Poster Image: Always rendered to prevent black gaps */}
         <img
           src={posterUrl || '/hero-loop.webp'}
           alt=""
@@ -70,8 +68,8 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
           decoding="async"
         />
 
-        {/* Hero Video: Overlaid on poster, smoothly fades in when actively playing */}
-        {isVideo && !videoError && (
+        {/* Hero Video: Fully visible and autoplays immediately on page load */}
+        {isVideo && (
           <video
             ref={videoRef}
             src={config.heroVideoUrl}
@@ -83,11 +81,7 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
             controls={false}
             disablePictureInPicture
             preload="auto"
-            onPlaying={() => setIsPlaying(true)}
-            onError={() => setVideoError(true)}
-            className={`absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none transition-opacity duration-500 ${
-              isPlaying ? 'opacity-100' : 'opacity-0'
-            }`}
+            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
           />
         )}
 
