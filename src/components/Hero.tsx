@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArtistConfig, TabType } from '../types/artist';
 
 interface HeroProps {
@@ -9,13 +9,26 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ config }) => {
-  const isVideo = config.heroVideoUrl?.match(/\.(mp4|mov|webm)$/i);
+  const isVideo = Boolean(config.heroVideoUrl?.match(/\.(mp4|mov|webm)$/i));
   const posterUrl = config.heroImage || '/hero-poster.jpg';
+  const [videoError, setVideoError] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <section className="relative w-full h-[50vh] min-h-[320px] sm:h-[85vh] lg:h-[92vh] overflow-hidden bg-black flex items-center justify-center border-b border-white/10 select-none">
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none bg-black">
-        {isVideo ? (
+        {/* Baseline Poster Image: Always rendered to prevent black-screen flash or loading gaps */}
+        <img
+          src={posterUrl || '/hero-loop.webp'}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
+          loading="eager"
+          decoding="async"
+        />
+
+        {/* Hero Video: Overlaid on poster, smoothly fades in on play, auto-hides if missing/error */}
+        {isVideo && !videoError && (
           <video
             src={config.heroVideoUrl}
             poster={posterUrl}
@@ -23,16 +36,12 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
             loop
             muted
             playsInline
-            className="relative w-full h-full object-cover object-center pointer-events-none select-none"
-          />
-        ) : (
-          <img
-            src={config.heroVideoUrl || posterUrl || '/hero-loop.webp'}
-            alt=""
-            aria-hidden="true"
-            className="relative w-full h-full object-cover object-center pointer-events-none select-none"
-            loading="eager"
-            decoding="async"
+            preload="metadata"
+            onPlaying={() => setIsPlaying(true)}
+            onError={() => setVideoError(true)}
+            className={`absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none transition-opacity duration-500 ${
+              isPlaying ? 'opacity-100' : 'opacity-0'
+            }`}
           />
         )}
 

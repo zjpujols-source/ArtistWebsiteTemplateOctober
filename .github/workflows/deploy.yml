@@ -22,6 +22,18 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: Auto-optimize Hero Video (if uploaded from phone)
+        run: |
+          if [ -f "public/hero-video.mp4" ]; then
+            FILESIZE=$(stat -c%s "public/hero-video.mp4" 2>/dev/null || stat -f%z "public/hero-video.mp4" 2>/dev/null || echo 0)
+            if [ "$FILESIZE" -gt 3000000 ]; then
+              echo "Optimizing large video ($FILESIZE bytes)..."
+              ffmpeg -y -i public/hero-video.mp4 -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 23 -preset fast -an -movflags +faststart public/hero-video-opt.mp4
+              mv public/hero-video-opt.mp4 public/hero-video.mp4
+              ffmpeg -y -ss 00:00:01.5 -i public/hero-video.mp4 -vframes 1 -q:v 2 public/hero-poster.jpg || true
+            fi
+          fi
+
       - name: Install dependencies
         run: npm ci
 

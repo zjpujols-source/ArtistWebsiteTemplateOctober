@@ -68,5 +68,9 @@ Create a new website for artist [ARTIST NAME] using the Github artist template f
 3. Update index.html, metadata.json, and package.json with the artist's details.
 4. Verify build locally with `npm run lint` and `npm run build`.
 5. Create a new public repository on GitHub under zjpujols-source/[ArtistName] and push the code to main.
-6. Start the local server on an open port (e.g. 3001) to verify everything renders properly.
+6. Copy Cloudflare secrets to the new repository so GitHub Actions automatically builds and deploys on every push (including iPhone video uploads):
+   gh secret set CLOUDFLARE_API_TOKEN -R zjpujols-source/[ArtistName] < ~/.cloudflare/api_token
+   gh secret set CLOUDFLARE_ACCOUNT_ID -R zjpujols-source/[ArtistName] < ~/.cloudflare/account_id
+7. Deploy initial version live with `npx wrangler deploy`.
+8. Start the local server on an open port (e.g. 3001) to verify everything renders properly.
 ```
