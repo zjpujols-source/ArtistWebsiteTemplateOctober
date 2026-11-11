@@ -92,6 +92,7 @@ export interface ArtistConfig {
       enabled: boolean;
       title: string;
       status?: 'active' | 'coming_soon';
+      url?: string;
     };
 
     contact: {

@@ -27,6 +27,7 @@ Create a new website for artist [ARTIST NAME] using the Github artist template f
 - SoundCloud: [SOUNDCLOUD URL - Optional]
 - Bandcamp: [BANDCAMP URL - Optional]
 - Audiomack: [AUDIOMACK URL - Optional]
+- Merch Store: [MERCH STORE URL - Optional]
 
 ### Music Videos (YouTube)
 - [YOUTUBE VIDEO 1 URL]

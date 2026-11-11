@@ -9,12 +9,17 @@ concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,13 +35,35 @@ jobs:
 
       - name: Auto-optimize Hero Video (if uploaded from phone)
         run: |
-          if [ -f "public/hero-video.mp4" ]; then
-            FILESIZE=$(stat -c%s "public/hero-video.mp4" 2>/dev/null || stat -f%z "public/hero-video.mp4" 2>/dev/null || echo 0)
-            if [ "$FILESIZE" -gt 3000000 ]; then
-              echo "Optimizing large video ($FILESIZE bytes)..."
-              ffmpeg -y -i public/hero-video.mp4 -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 23 -preset fast -an -movflags +faststart public/hero-video-opt.mp4
-              mv public/hero-video-opt.mp4 public/hero-video.mp4
-              ffmpeg -y -ss 00:00:01.5 -i public/hero-video.mp4 -vframes 1 -q:v 2 public/hero-poster.jpg || true
+          # Detect any uploaded hero video variant (.mp4, .mov, .MOV, .MP4)
+          SOURCE_VIDEO=""
+          for f in public/hero-video.mp4 public/hero-video.MP4 public/hero-video.mov public/hero-video.MOV; do
+            if [ -f "$f" ]; then
+              SOURCE_VIDEO="$f"
+              break
+            fi
+          done
+
+          if [ -n "$SOURCE_VIDEO" ]; then
+            FILESIZE=$(stat -c%s "$SOURCE_VIDEO" 2>/dev/null || stat -f%z "$SOURCE_VIDEO" 2>/dev/null || echo 0)
+            IS_MOV=0
+            case "$SOURCE_VIDEO" in
+              *.mov|*.MOV) IS_MOV=1 ;;
+            esac
+
+            # Optimize if over ~3MB or if uploaded as a MOV file
+            if [ "$FILESIZE" -gt 3000000 ] || [ "$IS_MOV" -eq 1 ]; then
+              echo "Optimizing hero video ($SOURCE_VIDEO, $FILESIZE bytes)..."
+              if ffmpeg -y -i "$SOURCE_VIDEO" -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 23 -preset fast -an -movflags +faststart public/hero-video-opt.mp4; then
+                if [ "$SOURCE_VIDEO" != "public/hero-video.mp4" ]; then
+                  rm -f "$SOURCE_VIDEO"
+                fi
+                mv public/hero-video-opt.mp4 public/hero-video.mp4
+                ffmpeg -y -ss 00:00:01.5 -i public/hero-video.mp4 -vframes 1 -q:v 2 public/hero-poster.jpg || true
+                echo "VIDEO_OPTIMIZED=1" >> $GITHUB_ENV
+              else
+                echo "Warning: ffmpeg optimization failed, continuing with original file"
+              fi
             fi
           fi
 
@@ -45,6 +72,15 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Commit optimized video and poster back to repo
+        if: env.VIDEO_OPTIMIZED == '1'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/hero-video.mp4 public/hero-poster.jpg
+          git commit -m "chore(media): optimize hero video and poster [skip ci]" || true
+          git push origin main || true
 
       - name: Deploy to Cloudflare
         if: env.CLOUDFLARE_API_TOKEN != ''
