@@ -22,6 +22,12 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: Setup FFmpeg
+        run: |
+          if ! command -v ffmpeg &> /dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
+
       - name: Auto-optimize Hero Video (if uploaded from phone)
         run: |
           if [ -f "public/hero-video.mp4" ]; then
